@@ -10,10 +10,15 @@ const SignUp = () => {
     isAccepted: false,
   });
   const [errors, setErrors] = useState({});
+  const [touch, setTouch] = useState({});
+
+  const focusHandler = (event) => {
+    setTouch({ ...touch, [event.target.name]: true });
+  };
 
   useEffect(() => {
     setErrors(validate(data));
-  }, [data]);
+  }, [data, touch]);
 
   const changeHandler = (event) => {
     if (event.target.name === "checkbox") {
@@ -23,9 +28,24 @@ const SignUp = () => {
     }
   };
 
+  const submitHandler = (event) => {
+    event.preventDefault();
+    if (!Object.keys(errors).length) {
+      console.log(data);
+    } else {
+      setTouch({
+        name: true,
+        email: true,
+        password: true,
+        confirmPassword: true,
+        isAccepted: true,
+      });
+    }
+  };
+
   return (
     <div>
-      <form>
+      <form onSubmit={submitHandler}>
         <h2>Sing up</h2>
         <div>
           <label htmlFor="name">Name</label>
@@ -35,8 +55,9 @@ const SignUp = () => {
             id="name"
             value={data.name}
             onChange={changeHandler}
+            onFocus={focusHandler}
           />
-          {errors.name && <span>{errors.name}</span>}
+          {errors.name && touch.name && <span>{errors.name}</span>}
         </div>
         <div>
           <label htmlFor="email">Email</label>
@@ -46,8 +67,9 @@ const SignUp = () => {
             id="email"
             value={data.email}
             onChange={changeHandler}
+            onFocus={focusHandler}
           />
-          {errors.email && <span>{errors.email}</span>}
+          {errors.email && touch.email && <span>{errors.email}</span>}
         </div>
         <div>
           <label htmlFor="password">Password</label>
@@ -57,8 +79,9 @@ const SignUp = () => {
             id="password"
             value={data.password}
             onChange={changeHandler}
+            onFocus={focusHandler}
           />
-          {errors.password && <span>{errors.password}</span>}
+          {errors.password && touch.password && <span>{errors.password}</span>}
         </div>
         <div>
           <label htmlFor="confirmPassword">Confirm Password</label>
@@ -68,8 +91,11 @@ const SignUp = () => {
             id="confirmPassword"
             value={data.confirmPassword}
             onChange={changeHandler}
+            onFocus={focusHandler}
           />
-          {errors.confirmPassword && <span>{errors.confirmPassword}</span>}
+          {errors.confirmPassword && touch.confirmPassword && (
+            <span>{errors.confirmPassword}</span>
+          )}
         </div>
         <div>
           <label htmlFor="checkbox">I agree terms and privacy policy</label>
@@ -79,11 +105,14 @@ const SignUp = () => {
             id="checkbox"
             value={data.isAccepted}
             onChange={changeHandler}
+            onFocus={focusHandler}
           />
-          {errors.isAccepted && <span>{errors.isAccepted}</span>}
+          {errors.isAccepted && touch.isAccepted && (
+            <span>{errors.isAccepted}</span>
+          )}
         </div>
         <a href="/">Login</a>
-        <button>Sign up</button>
+        <button type="submit">Sign up</button>
       </form>
     </div>
   );
