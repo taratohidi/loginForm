@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { validate } from "./validate";
 
 const SignUp = () => {
   const [data, setData] = useState({
@@ -8,6 +9,11 @@ const SignUp = () => {
     confirmPassword: "",
     isAccepted: false,
   });
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    setErrors(validate(data));
+  }, [data]);
 
   const changeHandler = (event) => {
     if (event.target.name === "checkbox") {
@@ -15,7 +21,6 @@ const SignUp = () => {
     } else {
       setData({ ...data, [event.target.name]: event.target.value });
     }
-    console.log(data);
   };
 
   return (
@@ -31,6 +36,7 @@ const SignUp = () => {
             value={data.name}
             onChange={changeHandler}
           />
+          {errors.name && <span>{errors.name}</span>}
         </div>
         <div>
           <label htmlFor="email">Email</label>
@@ -41,6 +47,7 @@ const SignUp = () => {
             value={data.email}
             onChange={changeHandler}
           />
+          {errors.email && <span>{errors.email}</span>}
         </div>
         <div>
           <label htmlFor="password">Password</label>
@@ -51,6 +58,7 @@ const SignUp = () => {
             value={data.password}
             onChange={changeHandler}
           />
+          {errors.password && <span>{errors.password}</span>}
         </div>
         <div>
           <label htmlFor="confirmPassword">Confirm Password</label>
@@ -61,6 +69,7 @@ const SignUp = () => {
             value={data.confirmPassword}
             onChange={changeHandler}
           />
+          {errors.confirmPassword && <span>{errors.confirmPassword}</span>}
         </div>
         <div>
           <label htmlFor="checkbox">I agree terms and privacy policy</label>
@@ -71,6 +80,7 @@ const SignUp = () => {
             value={data.isAccepted}
             onChange={changeHandler}
           />
+          {errors.isAccepted && <span>{errors.isAccepted}</span>}
         </div>
         <a href="/">Login</a>
         <button>Sign up</button>
